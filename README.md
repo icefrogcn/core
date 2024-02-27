@@ -32,3 +32,5 @@ This project is an independent continuation of the Elysium / LightsHope codebase
 - [Discord](https://discord.gg/x9a2jt7)
 - [Script Editor](https://github.com/brotalnia/scripteditor)
 - [Script Converter](https://github.com/vmangos/ScriptConverter)
+
+DMT branch
