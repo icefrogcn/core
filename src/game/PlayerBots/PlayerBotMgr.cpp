@@ -115,6 +115,25 @@ void PlayerBotMgr::Load()
         sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, "%u bots loaded", m_bots.size());
     }
 
+    sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, ">> [PlayerBotMgr] Loading Bots Name List...");
+    result = (CharacterDatabase.PQuery(
+        "SELECT name, gender"
+        " FROM ai_playerbot_names"));
+    if (!result)
+        sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, "Table `ai_playerbot_names` is empty.");
+    else
+    {
+        do
+        {
+            fields = result->Fetch();
+            std::string name = fields[0].GetCppString();
+            uint32 gender = fields[1].GetUInt32();
+            ai_playbot_name[gender].push_back(name);
+        } while (result->NextRow());
+        delete result;
+        sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, " ai_playerbot_names loaded.");
+    }
+
     // 5- Check config/DB
     if (m_confMinRandomBots >= m_bots.size() && !m_bots.empty())
         m_confMinRandomBots = m_bots.size() - 1;
@@ -143,6 +162,16 @@ void PlayerBotMgr::Load()
         sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, "[PlayerBotMgr] Between %u and %u bots online", m_confMinRandomBots, m_confMaxRandomBots);
         sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, "[PlayerBotMgr] %u now loading", m_stats.loadingCount);
     }
+}
+
+std::string PlayerBotMgr::GenerateBotName(uint32 gender)
+{
+    std::vector<std::string>& list0 = ai_playbot_name[gender];
+
+    if (list0.empty())
+        return sObjectMgr.GeneratePetName(1863); // Succubus name
+
+    return *(list0.begin() + urand(0, list0.size() - 1));
 }
 
 void PlayerBotMgr::DeleteAll()

@@ -107,6 +107,10 @@ class PlayerBotMgr
         uint32 GenBotAccountId() { return ++m_maxAccountId; }
         PlayerBotStats& GetStats(){ return m_stats; }
         void Start() { m_confEnableRandomBots = true; }
+
+        std::string GenerateBotName(uint32 gender);
+        std::map<uint32, std::vector<std::string> > ai_playbot_name;
+
     protected:
         // How long since last update?
         uint32 m_elapsedTime;
