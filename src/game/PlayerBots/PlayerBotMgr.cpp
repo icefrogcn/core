@@ -888,6 +888,42 @@ bool ChatHandler::HandlePartyBotAddCommand(char* args)
     if (char* arg1 = ExtractArg(&args))
     {
         std::string option = arg1;
+        if (option == "raid40")
+        {
+            for (uint32 i = 0; i < 3; i++) //tank
+                HandlePartyBotAddCommand("tank");
+            for (uint32 i = 0; i < 10; i++) //healer
+                HandlePartyBotAddCommand("healer");
+            for (uint32 i = 0; i < 4; i++) //rogue
+                HandlePartyBotAddCommand("rogue");
+            for (uint32 i = 0; i < 7; i++) //mage
+                HandlePartyBotAddCommand("mage");
+            for (uint32 i = 0; i < 2; i++) //warlock
+                HandlePartyBotAddCommand("warlock");
+            for (uint32 i = 0; i < 4; i++) //hunter
+                HandlePartyBotAddCommand("hunter");
+            for (uint32 i = 0; i < 3; i++) //dps
+                HandlePartyBotAddCommand("dps");
+            return true;
+        }
+        if (option == "raid20")
+        {
+            for (uint32 i = 0; i < 2; i++) //tank
+                HandlePartyBotAddCommand("tank");
+            for (uint32 i = 0; i < 5; i++) //healer
+                HandlePartyBotAddCommand("healer");
+            for (uint32 i = 0; i < 2; i++) //rogue
+                HandlePartyBotAddCommand("rogue");
+            for (uint32 i = 0; i < 4; i++) //mage
+                HandlePartyBotAddCommand("mage");
+            for (uint32 i = 0; i < 2; i++) //warlock
+                HandlePartyBotAddCommand("warlock");
+            for (uint32 i = 0; i < 2; i++) //hunter
+                HandlePartyBotAddCommand("hunter");
+            for (uint32 i = 0; i < 2; i++) //dps
+                HandlePartyBotAddCommand("dps");
+            return true;
+        }
         if (option == "warrior")
             botClass = CLASS_WARRIOR;
         else if (option == "paladin" && pPlayer->GetTeam() == ALLIANCE)
