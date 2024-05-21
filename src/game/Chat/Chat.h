@@ -273,6 +273,7 @@ class ChatHandler
         bool HandlePartyBotSetRoleCommand(char * args);
         bool HandlePartyBotAttackStartCommand(char * args);
         bool HandlePartyBotAttackStopCommand(char * args);
+        bool HandlePartyBotPullCommand(char * args);
         bool HandlePartyBotAoECommand(char * args);
         bool HandlePartyBotControlMarkCommand(char * args);
         bool HandlePartyBotFocusMarkCommand(char * args);
@@ -606,6 +607,7 @@ class ChatHandler
         bool HandleListItemCommand(char* args);
         bool HandleListObjectCommand(char* args);
         bool HandleListTalentsCommand(char* args);
+        bool HandleListMapsCommand(char* args);
         bool HandleListMoveGensCommand(char* args);
         bool HandleListHostileRefsCommand(char* args);
         bool HandleListThreatCommand(char* args);
@@ -755,6 +757,7 @@ class ChatHandler
         bool HandleUnitShowSheathStateCommand(char* args);
         bool HandleUnitShowMoveFlagsCommand(char* args);
         bool HandleUnitShowCreateSpellCommand(char* args);
+        bool HandleUnitShowCombatTimerCommand(char* args);
 
         bool HandlePDumpLoadCommand(char* args);
         bool HandlePDumpWriteCommand(char* args);
@@ -800,6 +803,7 @@ class ChatHandler
         bool HandleReloadConditionsCommand(char* args);
         bool HandleReloadCreatureSpellsCommand(char* args);
         bool HandleReloadCreatureSpellScriptsCommand(char* args);
+        bool HandleReloadCreatureTemplatesCommand(char* args);
         bool HandleReloadCreatureQuestRelationsCommand(char* args);
         bool HandleReloadCreatureQuestInvRelationsCommand(char* args);
         bool HandleReloadGameGraveyardZoneCommand(char* args);

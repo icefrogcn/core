@@ -92,7 +92,9 @@ enum WorldTimers
 // Configuration elements
 enum eConfigUInt32Values
 {
-    CONFIG_UINT32_COMPRESSION = 0,
+    CONFIG_UINT32_COMPRESSION_LEVEL = 0,
+    CONFIG_UINT32_COMPRESSION_UPDATE_SIZE,
+    CONFIG_UINT32_COMPRESSION_MOVEMENT_COUNT,
     CONFIG_UINT32_LOGIN_QUEUE_GRACE_PERIOD_SECS,
     CONFIG_UINT32_CHARACTER_SCREEN_MAX_IDLE_TIME,
     CONFIG_UINT32_PLAYER_HARD_LIMIT,
@@ -805,6 +807,7 @@ class World
         void LoadConfigSettings(bool reload = false);
 
         void SendWorldText(int32 string_id, ...);
+        void SendWorldTextToBGAndQueue(int32 string_id, uint32 queuedPlayerLevel, uint32 queueType, ...);
         void SendBroadcastTextToWorld(uint32 textId);
 
         // Only for GMs with ticket notification ON

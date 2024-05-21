@@ -17,7 +17,6 @@
 
 set(EXECUTABLE_NAME mangosd)
 set(EXECUTABLE_SRCS 
-  ChatSocket.h
   CliRunnable.h
   MaNGOSsoap.h
   Master.h
@@ -25,7 +24,6 @@ set(EXECUTABLE_SRCS
   soapH.h
   soapStub.h
   WorldRunnable.h
-  ChatSocket.cpp
   CliRunnable.cpp
   Main.cpp
   MaNGOSsoap.cpp
@@ -147,9 +145,12 @@ if(UNIX)
     ${OPENSSL_LIBRARIES}
     ${OPENSSL_EXTRA_LIBRARIES}
     ${ZLIB_LIBRARIES}
-    readline
   )
 endif()
+
+target_link_libraries(${EXECUTABLE_NAME}
+    readline
+)
 
 set(EXECUTABLE_LINK_FLAGS "")
 
@@ -158,6 +159,8 @@ if(UNIX)
 endif()
 
 if(APPLE)
+  include_directories(/usr/local/opt/readline/include)
+  link_directories(/usr/local/opt/readline/lib)
   set(EXECUTABLE_LINK_FLAGS "-framework Carbon ${EXECUTABLE_LINK_FLAGS}")
 endif()
 

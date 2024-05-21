@@ -561,7 +561,9 @@ void World::LoadConfigSettings(bool reload)
     setConfig(CONFIG_UINT32_LOGIN_QUEUE_GRACE_PERIOD_SECS, "LoginQueue.GracePeriodSecs", 0);
     setConfig(CONFIG_UINT32_CHARACTER_SCREEN_MAX_IDLE_TIME, "CharacterScreenMaxIdleTime", 0);
     setConfig(CONFIG_UINT32_ASYNC_QUERIES_TICK_TIMEOUT, "AsyncQueriesTickTimeout", 0);
-    setConfigMinMax(CONFIG_UINT32_COMPRESSION, "Compression", 1, 1, 9);
+    setConfigMinMax(CONFIG_UINT32_COMPRESSION_LEVEL, "Compression.Level", 1, 1, 9);
+    setConfig(CONFIG_UINT32_COMPRESSION_UPDATE_SIZE, "Compression.Update.Size", 128);
+    setConfig(CONFIG_UINT32_COMPRESSION_MOVEMENT_COUNT, "Compression.Movement.Count", 300);
     setConfig(CONFIG_BOOL_ADDON_CHANNEL, "AddonChannel", true);
     setConfig(CONFIG_BOOL_CLEAN_CHARACTER_DB, "CleanCharacterDB", true);
     setConfig(CONFIG_BOOL_GRID_UNLOAD, "GridUnload", true);
@@ -2236,6 +2238,48 @@ void World::SendWorldText(int32 string_id, ...)
             Player* player = session->GetPlayer();
             if (player && player->IsInWorld())
                 wt_do(player);
+        }
+    }
+
+    va_end(ap);
+}
+
+// Send a System Message to all players in the same battleground or queue (except self if mentioned)
+void World::SendWorldTextToBGAndQueue(int32 string_id, uint32 queuedPlayerLevel, uint32 queueType, ...)
+{
+    auto queueTypeId = static_cast<BattleGroundQueueTypeId>(queueType);
+    BattleGroundTypeId bgTypeId = BattleGroundMgr::BgTemplateId(queueTypeId);
+    BattleGroundBracketId queuedPlayerBracket = Player::GetBattleGroundBracketIdFromLevel(bgTypeId, queuedPlayerLevel);
+
+    va_list ap;
+    va_start(ap, queueType);
+
+    MaNGOS::WorldWorldTextBuilder wt_builder(string_id, &ap);
+    MaNGOS::LocalizedPacketListDo<MaNGOS::WorldWorldTextBuilder> wt_do(wt_builder);
+    for (const auto& itr : m_sessions)
+    {
+        if (WorldSession* session = itr.second)
+        {
+            Player* player = session->GetPlayer();
+            if (player && player->IsInWorld())
+            {
+                // Always announce it to all GMs.
+                if (session->GetSecurity() > SEC_PLAYER)
+                {
+                    wt_do(player);
+                    continue;
+                }
+
+                // If player is queued or already inside a BG matching the BG type.
+                if (player->InBattleGroundQueueForBattleGroundQueueType(queueTypeId) ||
+                    (player->InBattleGround() && player->GetBattleGroundTypeId() == bgTypeId))
+                {
+                    // If player bracket matches the queued player bracket.
+                    if (player->GetBattleGroundBracketIdFromLevel(bgTypeId) == queuedPlayerBracket)
+                        wt_do(player);
+                }
+
+            }
         }
     }
 
